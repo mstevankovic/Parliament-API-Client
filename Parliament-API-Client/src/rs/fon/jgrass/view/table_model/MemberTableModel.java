@@ -1,25 +1,43 @@
 package rs.fon.jgrass.view.table_model;
 
+import java.util.List;
+
 import javax.swing.table.AbstractTableModel;
 
-public class MemberTableModel extends AbstractTableModel{
+import rs.fon.jgrass.domain.Member;
+import rs.fon.jgrass.model.CollectionOfMembers;
 
+public class MemberTableModel extends AbstractTableModel{
+	
+	private String[] columnNames = {"id", "First name", "Last name", "Birth date"};
+	private List<Member> members;
+	
+	public MemberTableModel(){
+		members = CollectionOfMembers.getInstance().getListOfMembers();
+	}
+	
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return columnNames.length;
 	}
 
 	@Override
 	public int getRowCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return members.size();
 	}
 
 	@Override
-	public Object getValueAt(int arg0, int arg1) {
-		// TODO Auto-generated method stub
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Member member = members.get(rowIndex);
+		
+		switch(columnIndex){
+		}
 		return null;
+	}
+	
+	@Override
+	public String getColumnName(int columnIndex) {
+		return columnNames[columnIndex];
 	}
 
 }

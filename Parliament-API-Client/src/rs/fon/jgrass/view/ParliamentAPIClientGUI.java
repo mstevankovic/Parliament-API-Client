@@ -16,173 +16,189 @@ import rs.fon.jgrass.view.table_model.MemberTableModel;
 
 public class ParliamentAPIClientGUI extends JFrame implements ActionListener {
 
-		private JPanel panelEast;
+	private JPanel panelEast;
 		
-		private JMenuBar menuBar;
+	private static ParliamentAPIClientGUI instance;
 		
-		private JMenu fileMenu;
-		private JMenu separatorMenu;
-		private JMenu helpMenu;
+	private JMenuBar menuBar;
 		
-		private JMenuItem itemGETMembers;
-		private JMenuItem itemFillTable;
-		private JMenuItem itemUpdateMembers;
-		private JMenuItem itemExit;
-		private JMenuItem itemAbout;
+	private JMenu fileMenu;
+	private JMenu separatorMenu;
+	private JMenu helpMenu;
 		
-		private static JTable table;
+	private JMenuItem itemGETMembers;
+	private JMenuItem itemFillTable;
+	private JMenuItem itemUpdateMembers;
+	private JMenuItem itemExit;
+	private JMenuItem itemAbout;
 		
-		private JScrollPane scrollPane;
-		private JScrollPane scrollPaneTextArea;
+	private JTable table;
+	
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPaneTextArea;
 		
-		private JPopupMenu popUpMenu;
+	private JPopupMenu popUpMenu;
 		
-		private static JTextArea textArea;
-		
-		private JButton buttonGETMembers;
-		private JButton buttonFillTable;
-		private JButton buttonUpdateMembers;
-		
-		private JMenuItem itemGET;
-		private JMenuItem itemFILL;
-		private JMenuItem itemUPDATE;
+	private JTextArea textArea;
+	
+	private JButton buttonGETMembers;
+	private JButton buttonFillTable;
+	private JButton buttonUpdateMembers;
+	
+	private JMenuItem itemGET;
+	private JMenuItem itemFILL;
+	private JMenuItem itemUPDATE;
 		
 		private static final int WIDTH = 800;
 		private static final int HEIGHT = 600;
 		
-		public ParliamentAPIClientGUI()
-		{	
-			/**
-			 * Defining listeners
-			 */
-			addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowClosing(WindowEvent e) {
-					Controller.closeTheApplication();
-				}
-			});
-			setTitle("Parliament members");
-			setSize(WIDTH, HEIGHT);
-			setLayout(new BorderLayout());
+	public static ParliamentAPIClientGUI getInstance(){
+		if(instance == null){
+			instance = new ParliamentAPIClientGUI();
+		}
+		return instance;
+	}
+		
+	private ParliamentAPIClientGUI()
+	{	
+		/**
+		 * Defining listeners
+		 */
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				Controller.closeTheApplication();
+			}
+		});
+		setTitle("Parliament members");
+		setSize(WIDTH, HEIGHT);
+		setLayout(new BorderLayout());
 			
-			panelEast = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panelEast = new JPanel(new FlowLayout(FlowLayout.CENTER));
 			
-			/*
-			 * Adjusting menu bar
-			 */
-			menuBar = new JMenuBar();
+		/*
+		 * Adjusting menu bar
+		 */
+		menuBar = new JMenuBar();
 			
-			fileMenu = new JMenu("File");
-			separatorMenu = new JMenu("|");
-			helpMenu = new JMenu("Help");
+		fileMenu = new JMenu("File");
+		separatorMenu = new JMenu("|");
+		helpMenu = new JMenu("Help");
 			
-			separatorMenu.setEnabled(false);
+		separatorMenu.setEnabled(false);
 			
-			itemGETMembers = new JMenuItem("GET members");
-			itemFillTable = new JMenuItem("Fill table");
+		itemGETMembers = new JMenuItem("GET members");
+		itemFillTable = new JMenuItem("Fill table");
 			itemUpdateMembers = new JMenuItem("Update members");
 			itemExit = new JMenuItem("Exit");
 			
-			itemGETMembers.setAccelerator(KeyStroke.getKeyStroke(
-			        KeyEvent.VK_G, InputEvent.CTRL_MASK));
-			itemFillTable.setAccelerator(KeyStroke.getKeyStroke(
-			        KeyEvent.VK_F, InputEvent.CTRL_MASK));
-			itemUpdateMembers.setAccelerator(KeyStroke.getKeyStroke(
-					KeyEvent.VK_U, InputEvent.CTRL_MASK));
-			itemExit.setAccelerator(KeyStroke.getKeyStroke(
-			        KeyEvent.VK_X, InputEvent.ALT_MASK));
+		itemGETMembers.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_G, InputEvent.CTRL_MASK));
+		itemFillTable.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_F, InputEvent.CTRL_MASK));
+		itemUpdateMembers.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_U, InputEvent.CTRL_MASK));
+		itemExit.setAccelerator(KeyStroke.getKeyStroke(
+		        KeyEvent.VK_X, InputEvent.ALT_MASK));
 			
-			itemExit.addActionListener(this);
-			itemFillTable.addActionListener(this);
-			itemUpdateMembers.addActionListener(this);
+		itemExit.addActionListener(this);
+		itemFillTable.addActionListener(this);
+		itemUpdateMembers.addActionListener(this);
 			itemGETMembers.addActionListener(this);
 			
-			itemAbout = new JMenuItem("About");
+		itemAbout = new JMenuItem("About");
 			
-			itemAbout.addActionListener(this);
+		itemAbout.addActionListener(this);
 			
-			fileMenu.add(itemGETMembers);
-			fileMenu.add(itemFillTable);
-			fileMenu.add(itemUpdateMembers);
-			fileMenu.add(itemExit);
+		fileMenu.add(itemGETMembers);
+		fileMenu.add(itemFillTable);
+		fileMenu.add(itemUpdateMembers);
+		fileMenu.add(itemExit);
 			
-			helpMenu.add(itemAbout);
+		helpMenu.add(itemAbout);
 			
-			menuBar.add(fileMenu);
-			menuBar.add(separatorMenu);
-			menuBar.add(helpMenu);
+		menuBar.add(fileMenu);
+		menuBar.add(separatorMenu);
+		menuBar.add(helpMenu);
 			
-			setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 			
-			/*
-			 * Adjusting central panel
-			 */
-			// panelCenter.setPreferredSize(new Dimension(WIDTH - 150, HEIGHT - HEIGHT / 10));
+		/*
+		 * Adjusting central panel
+		 */
+		
+		table = new JTable(new MemberTableModel());
 			
-			table = new JTable(new MemberTableModel());
+		scrollPane = new JScrollPane(table);
+		table.setFillsViewportHeight(true);
+		scrollPane.setPreferredSize(new Dimension(WIDTH - 150, HEIGHT - HEIGHT / 10 - 10));
 			
-			scrollPane = new JScrollPane(table);
-			table.setFillsViewportHeight(true);
-			scrollPane.setPreferredSize(new Dimension(WIDTH - 150, HEIGHT - HEIGHT / 10 - 10));
+		itemGET = new JMenuItem("GET Members");
+		itemFILL = new JMenuItem("Fill table");
+		itemUPDATE = new JMenuItem("Update members");
 			
-			itemGET = new JMenuItem("GET Members");
-			itemFILL = new JMenuItem("Fill table");
-			itemUPDATE = new JMenuItem("Update members");
+		itemGET.addActionListener(this);
+		itemFILL.addActionListener(this);
+		itemUPDATE.addActionListener(this);
 			
-			itemGET.addActionListener(this);
-			itemFILL.addActionListener(this);
-			itemUPDATE.addActionListener(this);
+		popUpMenu = new JPopupMenu();
 			
-			popUpMenu = new JPopupMenu();
+		popUpMenu.add(itemGET);
+		popUpMenu.add(itemFILL);
+		popUpMenu.add(itemUPDATE);
 			
-			popUpMenu.add(itemGET);
-			popUpMenu.add(itemFILL);
-			popUpMenu.add(itemUPDATE);
-			
-			table.setComponentPopupMenu(popUpMenu);
+		table.setComponentPopupMenu(popUpMenu);
 					
-			/*
-			 * Adjusting south panel
-			 */
+		/*
+		 * Adjusting south panel
+		 */
 			
-			textArea = new JTextArea();
-			textArea.setPreferredSize(new Dimension(WIDTH - 2, HEIGHT / 10));
+		textArea = new JTextArea();
+		textArea.setPreferredSize(new Dimension(WIDTH - 2, HEIGHT / 10));
 			
-			scrollPaneTextArea = new JScrollPane(textArea);
-			scrollPaneTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPaneTextArea = new JScrollPane(textArea);
+		scrollPaneTextArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 			
-			Border border = BorderFactory.createEtchedBorder();
-			Border titled = BorderFactory.createTitledBorder(border, "STATUS");
+		Border border = BorderFactory.createEtchedBorder();
+		Border titled = BorderFactory.createTitledBorder(border, "STATUS");
 			
-			scrollPaneTextArea.setBorder(titled);
+		scrollPaneTextArea.setBorder(titled);
 			
-			/*
-			 * Adjusting east panel
-			 */
-			panelEast.setPreferredSize(new Dimension(150, HEIGHT - HEIGHT/10));
+		/*
+		 * Adjusting east panel
+		 */
+		panelEast.setPreferredSize(new Dimension(150, HEIGHT - HEIGHT/10));
 			
-			buttonGETMembers = new JButton("GET Members");
-			buttonFillTable = new JButton("Fill table");
-			buttonUpdateMembers= new JButton("Update members");
+		buttonGETMembers = new JButton("GET Members");
+		buttonFillTable = new JButton("Fill table");
+		buttonUpdateMembers= new JButton("Update members");
 			
-			buttonGETMembers.addActionListener(this);
-			buttonFillTable.addActionListener(this);
-			buttonUpdateMembers.addActionListener(this);
+		buttonGETMembers.addActionListener(this);
+		buttonFillTable.addActionListener(this);
+		buttonUpdateMembers.addActionListener(this);
 			
-			panelEast.add(buttonGETMembers);
-			panelEast.add(buttonFillTable);
-			panelEast.add(buttonUpdateMembers);
+		panelEast.add(buttonGETMembers);
+		panelEast.add(buttonFillTable);
+		panelEast.add(buttonUpdateMembers);
 			
-			/*
-			 * Adding panels to frame...
-			 */
+		/*
+		 * Adding panels to frame...
+		 */
 			
-			add(scrollPane, BorderLayout.CENTER);
-			add(panelEast, BorderLayout.EAST);
-			add(scrollPaneTextArea, BorderLayout.SOUTH);
+		add(scrollPane, BorderLayout.CENTER);
+		add(panelEast, BorderLayout.EAST);
+		add(scrollPaneTextArea, BorderLayout.SOUTH);
 			
-			pack();
-		}
+		pack();
+	}
+		
+	public JTable getTable() {
+		return table;
+	}
+		
+	public JTextArea getTextArea() {
+		return textArea;
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {

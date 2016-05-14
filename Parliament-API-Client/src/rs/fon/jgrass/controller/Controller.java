@@ -26,10 +26,10 @@ public class Controller {
 	 * Method for displaying ParliamentAPIClientGUI
 	 */
 	public static void showParliamentAPIClientGUI() {
-		ParliamentAPIClientGUI frame = new ParliamentAPIClientGUI();
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		frame.setVisible(true);
-		frame.setLocationRelativeTo(null);
+		ParliamentAPIClientGUI instance = ParliamentAPIClientGUI.getInstance();
+		instance.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		instance.setVisible(true);
+		instance.setLocationRelativeTo(null);
 	}
 
 	public static void showAbouDialog() {
@@ -53,6 +53,14 @@ public class Controller {
 	public static void updateMembers() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public static void showErrorAddingNewMemberDialog() {
+		JOptionPane.showMessageDialog(
+				null,
+				"Member has already been added!",
+				"ERROR", 
+				JOptionPane.ERROR_MESSAGE);		
 	}
 
 }
