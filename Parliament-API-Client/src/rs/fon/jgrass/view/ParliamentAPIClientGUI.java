@@ -49,16 +49,23 @@ public class ParliamentAPIClientGUI extends JFrame implements ActionListener {
 	private JMenuItem itemFILL;
 	private JMenuItem itemUPDATE;
 		
-		private static final int WIDTH = 800;
-		private static final int HEIGHT = 600;
+	private static final int WIDTH = 800;
+	private static final int HEIGHT = 600;
 		
+	/**
+	 * Instatiating only once
+	 * @return instance
+	 */
 	public static ParliamentAPIClientGUI getInstance(){
 		if(instance == null){
 			instance = new ParliamentAPIClientGUI();
 		}
 		return instance;
 	}
-		
+	
+	/**
+	 * Private constructor
+	 */
 	private ParliamentAPIClientGUI()
 	{	
 		/**
@@ -89,8 +96,8 @@ public class ParliamentAPIClientGUI extends JFrame implements ActionListener {
 			
 		itemGETMembers = new JMenuItem("GET members");
 		itemFillTable = new JMenuItem("Fill table");
-			itemUpdateMembers = new JMenuItem("Update members");
-			itemExit = new JMenuItem("Exit");
+		itemUpdateMembers = new JMenuItem("Update members");
+		itemExit = new JMenuItem("Exit");
 			
 		itemGETMembers.setAccelerator(KeyStroke.getKeyStroke(
 		        KeyEvent.VK_G, InputEvent.CTRL_MASK));

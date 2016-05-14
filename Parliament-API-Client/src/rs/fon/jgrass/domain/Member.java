@@ -1,11 +1,11 @@
 package rs.fon.jgrass.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
 public class Member {
-	
 	@SerializedName("id")
 	private int id;
 	
@@ -52,9 +52,11 @@ public class Member {
 
 	@Override
 	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
 		return "Member [id: " + getId() + 
 				", firstName: " + getFirstName() + 
 				", lastName: " + getLastName() + 
-				", birthday: " + getBirthDate() + "]";
+				", birthday: " + sdf.format(getBirthDate())+
+				"]";
 	}
 }
